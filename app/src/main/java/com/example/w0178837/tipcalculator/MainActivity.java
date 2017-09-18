@@ -9,8 +9,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.*;
-import android.view.*;
-import android.view.View.*;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class MainActivity extends AppCompatActivity {
@@ -29,13 +27,11 @@ public class MainActivity extends AppCompatActivity {
 
     NumberFormat numberFormat = new DecimalFormat("#,###.##");
 
-    public String calculatePercent(double amount, double percent)
-    {
+    public String calculateTip(double amount, double percent) {
         return numberFormat.format(amount * percent);
     }
 
-    public String calculateTotal(double amount, double percent)
-    {
+    public String calculateTotal(double amount, double percent) {
         return numberFormat.format(amount * (1 + percent));
     }
 
@@ -55,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         tipCustomEditText = (EditText) findViewById(R.id.tipCustomEditText);
         totalCustomEditText = (EditText) findViewById(R.id.totalCustomEditText);
         customSeekBar = (SeekBar) findViewById(R.id.customSeekBar);
+        customSeekBar.setProgress(18);
         customTipTextView = (TextView) findViewById(R.id.customTipTextView);
 
 
@@ -67,19 +64,17 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (! billEditText.getText().toString().isEmpty())
-                {
-                    tip10EditText.setText(calculatePercent(Double.parseDouble(billEditText.getText().toString()), 0.1));
-                    tip15EditText.setText(calculatePercent(Double.parseDouble(billEditText.getText().toString()), 0.15));
-                    tip20EditText.setText(calculatePercent(Double.parseDouble(billEditText.getText().toString()), 0.2));
+                if (!billEditText.getText().toString().isEmpty()) {
+                    tip10EditText.setText(calculateTip(Double.parseDouble(billEditText.getText().toString()), 0.1));
+                    tip15EditText.setText(calculateTip(Double.parseDouble(billEditText.getText().toString()), 0.15));
+                    tip20EditText.setText(calculateTip(Double.parseDouble(billEditText.getText().toString()), 0.2));
                     total10EditText.setText(calculateTotal(Double.parseDouble(billEditText.getText().toString()), 0.1));
                     total15EditText.setText(calculateTotal(Double.parseDouble(billEditText.getText().toString()), 0.15));
                     total20EditText.setText(calculateTotal(Double.parseDouble(billEditText.getText().toString()), 0.2));
-                    tipCustomEditText.setText(calculatePercent(Double.parseDouble(billEditText.getText().toString()), (customSeekBar.getProgress()/100)));
-                    totalCustomEditText.setText(calculateTotal(Double.parseDouble(billEditText.getText().toString()), (customSeekBar.getProgress()/100)));
-                }
-                else
-                {
+                    double cusomPercent = customSeekBar.getProgress() / 100.00;
+                    tipCustomEditText.setText(calculateTip(Double.parseDouble(billEditText.getText().toString()), cusomPercent));
+                    totalCustomEditText.setText(calculateTotal(Double.parseDouble(billEditText.getText().toString()), cusomPercent));
+                } else {
                     tip10EditText.setText("0.00");
                     tip15EditText.setText("0.00");
                     tip20EditText.setText("0.00");
