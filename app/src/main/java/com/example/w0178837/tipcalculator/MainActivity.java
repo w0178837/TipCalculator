@@ -1,16 +1,15 @@
 package com.example.w0178837.tipcalculator;
 
-import android.icu.text.DecimalFormat;
-import android.icu.text.NumberFormat;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
+
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.*;
 
-@RequiresApi(api = Build.VERSION_CODES.N)
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity {
     // Step 1 - Decalre variables for controls
     EditText billEditText;
@@ -26,11 +25,11 @@ public class MainActivity extends AppCompatActivity {
     TextView customTipTextView;
 
     public String calculateTip(double amount, double percent) {
-        return String.format("%,.2f", (double) (amount * percent));
+        return String.format(Locale.getDefault(), "%,.2f", (double) (amount * percent));
     }
 
     public String calculateTotal(double amount, double percent) {
-        return String.format("%,.2f", (double) (amount * (1 + percent)));
+        return String.format(Locale.getDefault(), "%,.2f", (double) (amount * (1 + percent)));
     }
 
     @Override
@@ -54,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         // step 3 - create listeners (as inner classes)
-        billEditText.addTextChangedListener(new TextWatcher() {
+        TextWatcher billEditTextListener = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -87,15 +86,15 @@ public class MainActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
 
             }
-        });
+        };
 
-        customSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        SeekBar.OnSeekBarChangeListener customSeekBarListener = new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser)
                 {
                     double cusomPercent = progress / 100.00;
-                    customTipTextView.setText("%"+String.format("%.0f",(double) progress));
+                    customTipTextView.setText(String.format("%.0f",(double) progress)+"%");
                     tipCustomEditText.setText(calculateTip(Double.parseDouble(billEditText.getText().toString()), cusomPercent));
                     totalCustomEditText.setText(calculateTotal(Double.parseDouble(billEditText.getText().toString()), cusomPercent));
                 }
@@ -110,7 +109,11 @@ public class MainActivity extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {
 
             }
-        });
+        };
+
+        // step 4, hook up the listeners
+        billEditText.addTextChangedListener(billEditTextListener);
+        customSeekBar.setOnSeekBarChangeListener(customSeekBarListener);
 
     } // end create
 }
