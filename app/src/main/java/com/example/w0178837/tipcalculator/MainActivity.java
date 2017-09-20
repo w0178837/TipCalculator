@@ -25,14 +25,12 @@ public class MainActivity extends AppCompatActivity {
     SeekBar customSeekBar;
     TextView customTipTextView;
 
-    NumberFormat numberFormat = new DecimalFormat("#,###.##");
-
     public String calculateTip(double amount, double percent) {
-        return numberFormat.format(amount * percent);
+        return String.format("%,.2f", (double) (amount * percent));
     }
 
     public String calculateTotal(double amount, double percent) {
-        return numberFormat.format(amount * (1 + percent));
+        return String.format("%,.2f", (double) (amount * (1 + percent)));
     }
 
     @Override
@@ -61,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
             }
-
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (!billEditText.getText().toString().isEmpty()) {
@@ -88,6 +85,29 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        customSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser)
+                {
+                    double cusomPercent = progress / 100.00;
+                    customTipTextView.setText("%"+String.format("%.0f",(double) progress));
+                    tipCustomEditText.setText(calculateTip(Double.parseDouble(billEditText.getText().toString()), cusomPercent));
+                    totalCustomEditText.setText(calculateTotal(Double.parseDouble(billEditText.getText().toString()), cusomPercent));
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
 
             }
         });
